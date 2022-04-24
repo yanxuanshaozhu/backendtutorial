@@ -95,21 +95,28 @@ router.get("/getShip/secondaryBattery", (req, res) => {
   });
 });
 
+/**
+ * Tell Express.js that when there is a PATCH request to /updateShip, do the following code
+ */
 router.patch("/updateShip", (req, res) => {
+  // If there no name field was provided in the request body
   if (!("name" in req.body)) {
     console.error("No name in request body!");
     res.status(400).send("No name in request body!");
   }
   else {
     Ship.findOneAndUpdate({name: req.body.name}, req.body, {new: true}, (err, doc) => {
+      // If there was an error
       if (err) {
         console.error("Error updating ship", err);
         res.status(500).send("Error updating ship");
       }
+      // If there was not matched document
       else if (!doc) {
         console.error("No matched ship found in the database!", err);
         res.status(404).send("No matched ship found in the database!");
       }
+      // Update was successful, return the updated document
       else {
         res.send(doc);
       }
